@@ -9,12 +9,9 @@ app.use(bodyParser.json());
 const cors = require("cors");
 app.use(cors());
 require('./config/db.js')
-const artis_router = require('./routers/artist.router.js');
+const user_router = require('./routers/artist.router.js');
 
-app.use('/api/users', artis_router);
-
-
-
+app.use('/api/users', user_router);
 
 // const mongoose = require("mongoose");
 
