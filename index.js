@@ -1,3 +1,4 @@
+
 const express = require("express");
 const bodyParser = require("body-parser");
 const crypto = require("crypto");
@@ -9,9 +10,6 @@ app.use(bodyParser.json());
 app.use(cors());
 // const PORT = process.env.PORT || 3031;
 const PORT = 8080;
-
-//Users Schema
-
 const UsersSchema = new mongoose.Schema({
   username: String,
   fullName: String,
@@ -83,12 +81,64 @@ app.patch ("/api/users/:id", async (req, res) => {
 });
 
 
+const PublishersSchema = new mongoose.Schema({
+    username: String,
+    password: String,
+    email: String,
+    backgroundImg: String,
+    profileImg: String,
+    name: String,
+    description: String,
+    joinedDate : Date,
+  });
+  const PublisherModel = mongoose.model("Publisher", PublishersSchema);
+  
+  // get all publishers
+  app.get("/api/publishers", async (req, res) => {
+    try {
+      const publishers = await PublisherModel.find({});
+      if (publishers.length == 0) {
+        res.status(204).send({
+          message: "empty array",
+        });
+      } else {
+        res.status(200).send({
+          message: "success",
+          data: publishers,
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching publishers:", error);
+      res.status(500).send({
+        message: "Internal Server Error",
+      });
+    }
+  });
+  //publishers id
+  app.get("/api/publishers/:id", async (req, res) => {
+    const { id } = req.params;
+    const data = await PublisherModel.findById(id);
+    if (data !== undefined) {
+      res.status(200).send(data);
+    } else {
+      res.status(204).send("data not found!");
+    }
+  });
+  //post publisher
+  app.post("/api/publishers", async (req, res) => {
+    const newPublisher = new PublisherModel(req.body);
+    await newPublisher.save();
+    res.status(201).send({
+      message: "data posted successfully",
+      data: newPublisher,
+    });
+  });
+
+
+  
 app.listen(PORT, () => {
-  console.log(`app listening on PORT:${PORT}`);
-});
-
-mongoose.connect('mongodb+srv://esmer2708:Admin123@app.tgqsqlp.mongodb.net/?retryWrites=true&w=majority')
-.then(() => console.log('Connected to Mongo DB!'));
-
-// mongoose.connect(process.env.DB_CONNECTION_KEY.replace('<password>',process.env.DB_PASSWORD))
-// .then(() => console.log('Connected to Mongo DB!'));
+    console.log(`app listening on PORT:${PORT}`);
+  });
+  
+  mongoose.connect('mongodb+srv://esmer2708:Admin123@app.tgqsqlp.mongodb.net/?retryWrites=true&w=majority')
+  .then(() => console.log('Connected to Mongo DB!'));
