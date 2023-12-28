@@ -1,6 +1,9 @@
+const mongoose = require("mongoose");
 const UserModel = require("../models/user.model.js");
+const bcrypt = require('bcrypt');
 
-const artist_controller = {
+
+const user_controller = {
   getAll: async (req, res) => {
     const users = await UserModel.find({});
     if (users.length == 0) {
@@ -16,20 +19,31 @@ const artist_controller = {
   },
   getOne: async (req, res) => {
     const { id } = req.params;
-    const data = await UserModel.findById(id);
-    if (data !== undefined) {
-      res.status(200).send(data);
-    } else {
-      res.status(204).send({message: "data not found!"});
-    }
-  },  
+    console.log(id);
+
+    if (mongoose.Types.ObjectId.isValid(id)) {
+      const user = await UserModel.findOne({ _id: id });
+      if (user) {
+        res.status(200).send(user);
+      } else res.status(404).send("Not Found!");
+    } else res.status(400).send("Bad Request!");
+  },
+
   register: async (req, res) => {
-    const newUser = new UserModel(req.body);
-    await newUser.save();
-    res.status(201).send({
-      message: "data posted successfully",
-      data: newUser,
-    });
+    console.log(req.body);
+    const candidate = await UserModel.findOne({ email: req.body.email });
+    if (candidate) {
+      res.status(400).send("This account already exists!");
+    } else {
+      const hashPassword = await bcrypt.hash(req.body.password, 3);
+      req.body.password = hashPassword;
+      const newUser = new UserModel(req.body);
+      newUser.save();
+      res.status(201).send({
+        message: "data posted successfully",
+        data: newUser,
+      });
+    }
   },
   delete: async (req, res) => {
     const { _id } = req.params;
@@ -54,4 +68,4 @@ const artist_controller = {
   },
 };
 
-module.exports = artist_controller;
+module.exports = user_controller;
