@@ -45,6 +45,22 @@ const user_controller = {
       });
     }
   },
+  login: async (req, res) => {
+    const {email, password} = req.body;
+    const user = await UserModel.findOne({email:email})
+    if (!user) {
+      res.send({message:'invalid credentials or unverified account'})
+      return;
+    }
+    const decryptedPass = bcrypt.compare(password,user.password)
+    if(!user.isVerified || !decryptedPass){
+      res.send({message:'invalid credentials or unverified account'})
+      return;
+    }
+    else{
+      res.send({message:'welcome'})
+    }
+  },
   delete: async (req, res) => {
     const { _id } = req.params;
     const deletedUser = await UserModel.findByIdAndDelete(_id);

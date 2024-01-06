@@ -9,6 +9,7 @@ const PublisherValidation = Joi.object({
     name: Joi.string().min(3).max(20).required(),
     description: Joi.string().min(2).max(50).optional(),
     joinedDate : Joi.date(),  
+    isVerified : Joi.boolean()
 })
   
   module.exports = PublisherValidation

@@ -6,8 +6,8 @@ const NewsSchema = new mongoose.Schema({
         ref: "Publisher",
     },
     title: String,
-    image: String,
-    body: Object,
+    imageUrl: String,
+    body: Array,
     createdAt : Date,
   });
 

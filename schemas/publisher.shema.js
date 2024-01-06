@@ -9,6 +9,7 @@ const PublishersSchema = new mongoose.Schema({
     name: String,
     description: String,
     joinedDate : Date,
+    isVerified: Boolean,
   });
 
   module.exports = PublishersSchema;
