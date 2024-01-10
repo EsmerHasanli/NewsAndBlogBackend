@@ -4,9 +4,7 @@ const news_controller = require('../controllers/news.controller');
 
 news_router.get('/', news_controller.getAll);
 
-news_router.get('publishers/:id', news_controller.getOne);
-
-news_router.get('news/:id', news_controller.getOne);
+news_router.get('/:id', news_controller.getOne);
 
 news_router.post('/', news_controller.post);
 
