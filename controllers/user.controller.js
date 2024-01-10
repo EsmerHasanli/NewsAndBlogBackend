@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const UserModel = require("../models/user.model.js");
 const bcrypt = require('bcrypt');
+const nodemailer = require("nodemailer");
 
 
 const user_controller = {

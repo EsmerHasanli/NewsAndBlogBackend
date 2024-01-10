@@ -9,6 +9,8 @@ publisher_router.get('/:id', publisher_controller.getOne);
 
 publisher_router.post('/', PublisherAuthMiddleware,publisher_controller.register);
 
+publisher_router.get('/verify/:token', publisher_controller.verify);
+
 publisher_router.post('/login', PublisherAuthMiddleware,publisher_controller.login);
 
 module.exports = publisher_router;
